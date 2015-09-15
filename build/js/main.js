@@ -42,13 +42,6 @@ BirdGraphicsComponent.prototype.draw = function(context) {
     context.fill();
 };
 
-BirdGraphicsComponent.prototype.draw = function(context) {
-    context.beginPath();
-    context.arc(200, 200, 50, 0, 2 * Math.PI);
-    context.fillStyle="blue";
-    context.fill();
-};
-
 exports.BirdGraphicsComponent = BirdGraphicsComponent;
 
 },{}],3:[function(require,module,exports){
