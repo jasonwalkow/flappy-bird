@@ -42,6 +42,16 @@ BirdGraphicsComponent.prototype.draw = function() {
 exports.BirdGraphicsComponent = BirdGraphicsComponent;
 
 },{}],3:[function(require,module,exports){
+var PipeGraphicsComponent = function(entity) {
+    this.entity = entity;
+};
+
+PipeGraphicsComponent.prototype.draw = function() {
+    console.log("Drawing a pipe");
+};
+
+exports.PipeGraphicsComponent = PipeGraphicsComponent;
+},{}],4:[function(require,module,exports){
 var graphicsComponent = require("../components/graphics/bird");
 
 var Bird = function() {
@@ -54,12 +64,26 @@ var Bird = function() {
 };
 
 exports.Bird = Bird;
-},{"../components/graphics/bird":2}],4:[function(require,module,exports){
+},{"../components/graphics/bird":2}],5:[function(require,module,exports){
+var graphicsComponent = require("../components/graphics/pipe");
+
+var Pipe = function() {
+    console.log("Creating Pipe entity");
+
+    var graphics = new graphicsComponent.PipeGraphicsComponent(this);
+    this.components = {
+        graphics: graphics
+    };
+};
+
+exports.Pipe = Pipe;
+},{"../components/graphics/pipe":3}],6:[function(require,module,exports){
 var graphicsSystem = require('./systems/graphics');
 var bird = require('./entities/bird');
+var pipe = require('./entities/pipe');
 
 var FlappyBird = function() {
-    this.entities = [new bird.Bird()];
+    this.entities = [new bird.Bird(), new pipe.Pipe()];
     this.graphics = new graphicsSystem.GraphicsSystem(this.entities);
 };
 
@@ -68,7 +92,7 @@ FlappyBird.prototype.run = function() {
 };
 
 exports.FlappyBird = FlappyBird;
-},{"./entities/bird":3,"./systems/graphics":6}],5:[function(require,module,exports){
+},{"./entities/bird":4,"./entities/pipe":5,"./systems/graphics":8}],7:[function(require,module,exports){
 console.log("entering");
 var flappyBird = require('./flappy_bird');
 var domReady = require('domready');
@@ -77,7 +101,7 @@ domReady (function() {
     app.run();
 });
 
-},{"./flappy_bird":4,"domready":1}],6:[function(require,module,exports){
+},{"./flappy_bird":6,"domready":1}],8:[function(require,module,exports){
 var GraphicsSystem = function(entities) {
     this.entities = entities;
 };
@@ -101,4 +125,4 @@ GraphicsSystem.prototype.tick = function() {
 };
 
 exports.GraphicsSystem = GraphicsSystem;
-},{}]},{},[5]);
+},{}]},{},[7]);
