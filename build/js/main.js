@@ -40,10 +40,14 @@ BirdGraphicsComponent.prototype.draw = function(context) {
 
     context.save();
     context.translate(position.x, position.y);
-    context.beginPath();
-    context.arc(0, 0, 0.02, 0, 2 * Math.PI);
-    context.fill();
-    context.closePath();
+    var img = new Image();
+    img.src = "../site/img/flappy_lg.png";
+    context.scale(1, -1);
+    context.drawImage(img, 0, 0, 200, 200, -0.1, 0, 0.15, 0.15);
+    //context.beginPath();
+    //context.arc(0, 0, 0.02, 0, 2 * Math.PI);
+    //context.fill();
+    //context.closePath();
     context.restore();
 };
 
@@ -54,8 +58,19 @@ var PipeGraphicsComponent = function(entity) {
     this.entity = entity;
 };
 
-PipeGraphicsComponent.prototype.draw = function() {
+PipeGraphicsComponent.prototype.draw = function(context) {
     console.log("Drawing a pipe");
+    var position = this.entity.components.physics.position;
+    context.save();
+ 	  context.translate(position.x, position.y);
+  	var img = new Image();
+  	img.src = "../site/img/pipe.png";
+  	context.drawImage(img, 0, 0, 500, 1000, 0.31, 0.6, 0.2, 0.65);
+  	var img2 = new Image();
+  	img2.src = "../site/img/pipe.png";
+  	context.rotate(Math.PI);
+  	context.drawImage(img2, 0, 0, 500, 1000, -0.5, -0.3, 0.2, 0.65);
+  	context.restore();
 };
 
 exports.PipeGraphicsComponent = PipeGraphicsComponent;
@@ -106,21 +121,33 @@ var Bird = function() {
 exports.Bird = Bird;
 },{"../components/graphics/bird":2,"../components/physics/physics":4}],6:[function(require,module,exports){
 var graphicsComponent = require("../components/graphics/pipe");
+var physicsComponent = require("../components/physics/physics");
 
 var Pipe = function() {
     console.log("Creating Pipe entity");
 
+    this.type = 'pipe';
+    var physics = new physicsComponent.PhysicsComponent(this);
+	    physics.position.x = 1;
+	  	physics.position.y = 0;
+	  	physics.velocity.x = -0.6;
+
     var graphics = new graphicsComponent.PipeGraphicsComponent(this);
-    this.components = {
-        graphics: graphics
-    };
+
+  	var Pipe = function(position, size) {};
+
+  	this.components = {
+    	graphics: graphics,
+    	physics: physics
+  	};
 };
 
 exports.Pipe = Pipe;
-},{"../components/graphics/pipe":3}],7:[function(require,module,exports){
+},{"../components/graphics/pipe":3,"../components/physics/physics":4}],7:[function(require,module,exports){
 var graphicsSystem = require('./systems/graphics');
 var physicsSystem = require('./systems/physics');
 var inputSystem = require('./systems/input');
+var pipesSystem = require('./systems/pipes');
 var bird = require('./entities/bird');
 var pipe = require('./entities/pipe');
 
@@ -129,16 +156,18 @@ var FlappyBird = function() {
     this.graphics = new graphicsSystem.GraphicsSystem(this.entities);
     this.physics = new physicsSystem.PhysicsSystem(this.entities);
     this.input = new inputSystem.InputSystem(this.entities);
+    this.pipes = new pipesSystem.PipesSystem(this.entities);
 };
 
 FlappyBird.prototype.run = function() {
     this.graphics.run();
     this.physics.run();
     this.input.run();
+    this.pipes.run();
 };
 
 exports.FlappyBird = FlappyBird;
-},{"./entities/bird":5,"./entities/pipe":6,"./systems/graphics":9,"./systems/input":10,"./systems/physics":11}],8:[function(require,module,exports){
+},{"./entities/bird":5,"./entities/pipe":6,"./systems/graphics":9,"./systems/input":10,"./systems/physics":11,"./systems/pipes":12}],8:[function(require,module,exports){
 console.log("entering");
 var flappyBird = require('./flappy_bird');
 var domReady = require('domready');
@@ -231,4 +260,21 @@ PhysicsSystem.prototype.tick = function() {
 };
 
 exports.PhysicsSystem = PhysicsSystem;
-},{}]},{},[8]);
+},{}],12:[function(require,module,exports){
+var pipe = require('../entities/pipe');
+
+var PipesSystem = function(entities) {
+  this.entities = entities;
+  this.canvas = document.getElementById('main-canvas');
+};
+
+PipesSystem.prototype.run = function() {
+  this.canvas = window.setInterval(this.tick.bind(this), 2000);
+};
+
+PipesSystem.prototype.tick = function() {
+    this.entities.push(new pipe.Pipe);
+};
+
+exports.PipesSystem = PipesSystem;
+},{"../entities/pipe":6}]},{},[8]);
