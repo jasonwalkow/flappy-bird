@@ -4,7 +4,6 @@ var BirdGraphicsComponent = function(entity) {
 
 BirdGraphicsComponent.prototype.draw = function(context) {
     var position = this.entity.components.physics.position;
-
     context.save();
     context.translate(position.x, position.y);
     var img = new Image();

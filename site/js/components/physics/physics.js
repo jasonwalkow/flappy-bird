@@ -21,6 +21,7 @@ PhysicsComponent.prototype.update = function(delta) {
 
     this.position.x += this.velocity.x * delta;
     this.position.y += this.velocity.y * delta;
+    console.log(this.type + " x: " + this.position.x + ", y: " + this.position.y);
 };
 
 exports.PhysicsComponent = PhysicsComponent;
